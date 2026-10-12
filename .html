@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chuyện Đơn Phương</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .card {
+            background: white;
+            padding: 30px;
+            border-radius: 16px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            text-align: center;
+            max-width: 450px;
+            width: 90%;
+        }
+        h2 {
+            color: #333;
+            margin-bottom: 24px;
+            line-height: 1.5;
+            white-space: pre-line;
+        }
+        .btn-container {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        button {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 14px 20px;
+            font-size: 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-weight: 600;
+        }
+        button:hover {
+            background-color: #0056b3;
+            transform: translateY(-2px);
+        }
+        button.success {
+            background-color: #28a745;
+        }
+        button.success:hover {
+            background-color: #218838;
+        }
+    </style>
+</head>
+<body>
+
+<div class="card">
+    <h2 id="question">Bạn có đơn phương ko?</h2>
+    <div class="btn-container" id="buttons">
+        <!-- Các nút bấm sẽ tự động thay đổi tại đây -->
+    </div>
+</div>
+
+<script>
+    const kichBan = {
+        "start": {
+            "text": "Bạn có đơn phương ko?",
+            "choices": [
+                { "label": "Không", "next": "ket_thuc" },
+                { "label": "Có", "next": "co_lo_lang_1" }
+            ]
+        },
+        "co_lo_lang_1": {
+            "text": "Thế thì có hai điều phải lo lắng.\nĐó là người ta biết hay ko biết?",
+            "choices": [
+                { "label": "Ko biết", "next": "ket_thuc" },
+                { "label": "Biết", "next": "co_lo_lang_2" }
+            ]
+        },
+        "co_lo_lang_2": {
+            "text": "Thế thì có hai điều phải lo lắng.\nĐó là tiếp tục chờ hay tỏ tình luôn phen này?",
+            "choices": [
+                { "label": "Tiếp tục chờ", "next": "ket_thuc" },
+                { "label": "Tỏ tình luôn", "next": "co_lo_lang_3" }
+            ]
+        },
+        "co_lo_lang_3": {
+            "text": "Thế thì có hai điều phải lo lắng.\nĐó là người ta đồng ý hay từ chối?",
+            "choices": [
+                { "label": "Từ chối", "next": "ket_thuc" },
+                { "label": "Đồng ý", "next": "co_lo_lang_4" }
+            ]
+        },
+        "co_lo_lang_4": {
+            "text": "Thế thì có hai điều phải lo lắng.\nĐó là thành công của người đạt được hay thành công của người được ban ơn?",
+            "choices": [
+                { "label": "Thành công của người đạt được", "next": "ket_thuc" },
+                { "label": "Thành công của người được ban ơn", "next": "co_lo_lang_5" }
+            ]
+        },
+        "co_lo_lang_5": {
+            "text": "Thế thì có hai điều phải lo lắng.\nĐó là biết ơn vì điều này hay trong lòng có cảm giác biết ơn?",
+            "choices": [
+                { "label": "Biết ơn", "next": "ket_thuc" },
+                { "label": "Cảm giác biết ơn", "next": "co_lo_lang_6" }
+            ]
+        },
+        "co_lo_lang_6": {
+            "text": "Thế thì có hai điều phải lo lắng.\nĐó là nên yêu tiếp hay tiếp tục đơn phương?",
+            "choices": [
+                { "label": "Yêu tiếp", "next": "ket_thuc" },
+                { "label": "Tiếp tục đơn phương", "next": "vong_lap" }
+            ]
+        },
+        "vong_lap": {
+            "text": "🔄 Ôi không, bạn lại rơi vào vòng lặp vô hạn của sự đơn phương rồi!",
+            "choices": [
+                { "label": "Quay lại từ đầu", "next": "start" }
+            ]
+        },
+        "ket_thuc": {
+            "text": "✨ Thế thì ko cần gì phải lo lắng! ✨",
+            "choices": [
+                { "label": "Chơi lại từ đầu", "next": "start", "isReset": true }
+            ]
+        }
+    };
+
+    function hienThiNut(idNut) {
+        const data = kichBan[idNut];
+        document.getElementById("question").innerText = data.text;
+        
+        const container = document.getElementById("buttons");
+        container.innerHTML = ""; // Xóa các nút cũ
+
+        data.choices.forEach(choice => {
+            const btn = document.createElement("button");
+            btn.innerText = choice.label;
+            
+            // Đổi màu nếu là nút kết thúc hoặc chơi lại
+            if (idNut === "ket_thuc" || choice.isReset) {
+                btn.classList.add("success");
+            }
+
+            btn.onclick = () => hienThiNut(choice.next);
+            container.appendChild(btn);
+        });
+    }
+
+    // Chạy câu chuyện từ nút start đầu tiên
+    hienThiNut("start");
+</script>
+
+</body>
+</html>
